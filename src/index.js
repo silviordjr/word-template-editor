@@ -10,4 +10,5 @@ app.put("/login", userController.login)
 
 app.get("/users", userController.getAll)
 
-app.post("/file", fileController.create)
+app.post("/file/:model", fileController.create)
+app.get("/download/:id", fileController.download)

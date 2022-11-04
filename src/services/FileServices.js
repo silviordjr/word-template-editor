@@ -4,13 +4,28 @@ import IdGenerator from './../helpers/IdGenerator.js';
 import fs from 'fs';
 import path from 'path';
 import {fileURLToPath} from 'url';
+import Authenticator from '../helpers/Authenticator.js';
 
 export default class FileServices {
-    async create (body, protocol, host){
+    async create (body, token, model, populate, get){
+        if (!token){
+            throw new Error ("Usuário não autenticado.")
+        }
+
+        const tokenData = new Authenticator().getTokenData(token)
+
+        if (!tokenData){
+            throw new Error ("Usuário não autenticado.")
+        }
+
         const __fileName = fileURLToPath(import.meta.url);
         const __dirname = path.dirname(__fileName);
 
-        const inputDir = path.resolve(__dirname, "../../inputs/tag-example.docx")
+        const inputDir = path.resolve(__dirname, `../../inputs/${model}.docx`)
+
+        if (!inputDir){
+            throw new Error ("Modelo inválido.")
+        }
 
         const content = await fs.promises.readFile(
             inputDir,
@@ -40,8 +55,33 @@ export default class FileServices {
             outputDir, buf
         )
 
-        const fileLink = `${protocol}://${host}/outputs/${id}.docx`
+        await populate(id, tokenData.id, body.departament, body.name)
 
-        return {link: fileLink}
+        const file = await get(id)
+
+        return {file}
+    }
+    
+    async download (id, token){
+        if (!token){
+            throw new Error ("Usuário não autenticado.")
+        }
+
+        const tokenData = new Authenticator().getTokenData(token)
+
+        if (!tokenData){
+            throw new Error ("Usuário não autenticado.")
+        }
+
+        const __fileName = fileURLToPath(import.meta.url);
+        const __dirname = path.dirname(__fileName);
+
+        const file = path.resolve(__dirname, `../outputs/${id}.docx`).toString()
+
+        if (!file){
+            throw new Error ("Arquivo inexistente.")
+        }
+
+        return file
     }
 }
