@@ -55,14 +55,18 @@ export default class FileServices {
             outputDir, buf
         )
 
-        await populate(id, tokenData.id, body.departament, body.name)
+        if (!body.protected){
+            body.protected = false
+        }
+
+        await populate(id, tokenData.id, body.departament, body.name, body.protected)
 
         const file = await get(id)
 
         return {file}
     }
     
-    async download (id, token){
+    async download (id, token, get){
         if (!token){
             throw new Error ("Usuário não autenticado.")
         }
@@ -71,6 +75,12 @@ export default class FileServices {
 
         if (!tokenData){
             throw new Error ("Usuário não autenticado.")
+        }
+
+        const fileData = await get(id)
+
+        if (tokenData.id !== fileData.userId && fileData.protected){
+            throw new Error ("Sem permissão para este arquivo.")
         }
 
         const __fileName = fileURLToPath(import.meta.url);
@@ -83,5 +93,29 @@ export default class FileServices {
         }
 
         return file
+    }
+
+    async getByUserId (token, userId, page, getByUser) {
+        if (!token){
+            throw new Error ("Usuário não autenticado.")
+        }
+
+        const tokenData = new Authenticator().getTokenData(token)
+
+        if (!tokenData){
+            throw new Error ("Usuário não autenticado.")
+        }
+
+        let owner
+
+        if (tokenData.id === userId) {
+            owner = true
+        } else {
+            owner = false
+        }
+
+        const files = await getByUser(userId, page, owner)
+
+        return files
     }
 }

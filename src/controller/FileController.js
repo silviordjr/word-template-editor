@@ -21,7 +21,7 @@ export default class FileController {
             const token = req.headers.authorization || ''
             const id = req.params.id
             const pathUrl = req.path
-            const file = await new FileServices().download(id, token)
+            const file = await new FileServices().download(id, token, new FileDatabase().getById)
 
             if (pathUrl !== "/"){
                 res.download(file, (err) => {
@@ -33,6 +33,20 @@ export default class FileController {
                 res.status(200).send("ok")
             }
             
+        } catch (error) {
+            res.status(500).send(error.message)
+        }
+    }
+
+    async getByUser (req, res) {
+        try {
+            const token = req.headers.authorization || ''
+            const userId = req.params.userId
+            const page = req.query.page || 1
+
+            const files = await new FileServices().getByUserId(token, userId, page, new FileDatabase().getByUserId)
+
+            res.status(200).send({files})
         } catch (error) {
             res.status(500).send(error.message)
         }
