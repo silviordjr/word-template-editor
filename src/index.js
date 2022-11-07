@@ -8,6 +8,7 @@ const userController = new UserController()
 app.post("/signup", userController.create)
 app.put("/login", userController.login)
 app.get("/users", userController.getAll)
+app.get("/users/:id", userController.getById)
 
 app.post("/files/:model", fileController.create)
 app.get("/files/:userId", fileController.getByUser)

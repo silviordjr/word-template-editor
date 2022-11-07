@@ -44,7 +44,17 @@ export default class UserController {
     }
 
     async getById (req, res) {
+        try {
+            const token = req.headers.authorization
+            const id = req.params.id
 
+            const user = await new UserServices().getById(token, id, new UserDatabase().getById)
+
+            res.status(200).send(user)
+            
+        } catch (error) {
+            res.status(500).send(error.message || error.sqlmessage)
+        }
     }
 
     async update (req, res) {

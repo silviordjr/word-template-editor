@@ -46,4 +46,12 @@ export default class UserDatabase {
 
         return users
     } 
+
+    async getById (id){
+        const user = await connection ('users')
+        .select('id', 'name', 'email', 'registration', 'departament')
+        .where({id})
+
+        return user[0]
+    }
 }
