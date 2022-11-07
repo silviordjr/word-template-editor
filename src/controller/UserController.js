@@ -10,7 +10,7 @@ export default class UserController {
 
             res.status(200).send(token)
         } catch (error) {
-            res.status(500).send(error.message || error.sqlmessage)
+            res.status(400).send({mesage: error.message || error.sqlmessage})
         }
     }
 
@@ -22,7 +22,7 @@ export default class UserController {
 
             res.status(200).send(token)
         } catch (error) {
-            res.status(500).send(error.message || error.sqlmessage)
+            res.status(400).send({mesage: error.message || error.sqlmessage})
         }
 
     }
@@ -38,7 +38,7 @@ export default class UserController {
             res.status(200).send(users)
             
         } catch (error) {
-            res.status(500).send(error.message || error.sqlmessage)
+            res.status(400).send({mesage: error.message || error.sqlmessage})
         }
 
     }
@@ -53,7 +53,19 @@ export default class UserController {
             res.status(200).send(user)
             
         } catch (error) {
-            res.status(500).send(error.message || error.sqlmessage)
+            res.status(400).send({mesage: error.message || error.sqlmessage})
+        }
+    }
+
+    async getCurrent (req, res) {
+        try {
+            const token = req.headers.authorization
+
+            const user = await new UserServices().getCurrent(token, new UserDatabase().getById)
+
+            res.status(200).send(user)
+        } catch (error) {
+            res.status(400).send({mesage: error.message || error.sqlmessage})
         }
     }
 

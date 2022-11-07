@@ -12,7 +12,7 @@ export default class FileController {
 
             res.status(200).send(doc)
         } catch (error) {
-            res.status(500).send(error.message)
+            res.status(400).send({message: error.message})
         }
     }
 
@@ -34,7 +34,7 @@ export default class FileController {
             }
             
         } catch (error) {
-            res.status(500).send(error.message)
+            res.status(400).send({message: error.message})
         }
     }
 
@@ -48,7 +48,7 @@ export default class FileController {
 
             res.status(200).send({files})
         } catch (error) {
-            res.status(500).send(error.message)
+            res.status(400).send({message: error.message})
         }
     }
 }

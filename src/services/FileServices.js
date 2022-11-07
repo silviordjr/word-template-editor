@@ -67,21 +67,21 @@ export default class FileServices {
     }
     
     async download (id, token, get){
-        if (!token){
-            throw new Error ("Usuário não autenticado.")
-        }
+        // if (!token){
+        //     throw new Error ("Usuário não autenticado.")
+        // }
 
-        const tokenData = new Authenticator().getTokenData(token)
+        // const tokenData = new Authenticator().getTokenData(token)
 
-        if (!tokenData){
-            throw new Error ("Usuário não autenticado.")
-        }
+        // if (!tokenData){
+        //     throw new Error ("Usuário não autenticado.")
+        // }
 
-        const fileData = await get(id)
+        // const fileData = await get(id)
 
-        if (tokenData.id !== fileData.userId && fileData.protected){
-            throw new Error ("Sem permissão para este arquivo.")
-        }
+        // if (fileData.protected && (tokenData.id !== fileData.user_id)){
+        //     throw new Error ("Sem permissão para este arquivo.")
+        // }
 
         const __fileName = fileURLToPath(import.meta.url);
         const __dirname = path.dirname(__fileName);

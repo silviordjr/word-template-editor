@@ -92,4 +92,20 @@ export default class UserServices {
 
         return user
     }
+
+    async getCurrent (token, get){
+        if (!token){
+            throw new Error ("Usuário não autenticado.")
+        }
+
+        const tokenData = new Authenticator().getTokenData(token)
+
+        if (!tokenData){
+            throw new Error ("Usuário não autenticado.")
+        }
+
+        const user = await get (tokenData.id)
+
+        return user
+    }
 }
