@@ -18,7 +18,7 @@ export default class FileController {
 
     async download (req, res) {
         try {
-            const token = req.headers.authorization || ''
+            const token = req.params.token
             const id = req.params.id
             const pathUrl = req.path
             const file = await new FileServices().download(id, token, new FileDatabase().getById)

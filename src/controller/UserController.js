@@ -5,10 +5,11 @@ export default class UserController {
     async create (req, res) {
         try {
             const {name, email, registration, departament, password, role} = req.body
+            const token = req.headers.authorization
 
-            const token = await new UserServices().create(name, email, registration, departament, password, new UserDatabase().checkByEmail, new UserDatabase().create, role)
+            const response = await new UserServices().create(name, email, registration, departament, password, new UserDatabase().checkByEmail, new UserDatabase().create, role, token)
 
-            res.status(200).send(token)
+            res.status(200).send(response)
         } catch (error) {
             res.status(400).send({mesage: error.message || error.sqlmessage})
         }

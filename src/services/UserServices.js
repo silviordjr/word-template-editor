@@ -3,7 +3,21 @@ import HashManager from '../helpers/HashManager.js';
 import IdGenerator from './../helpers/IdGenerator.js';
 
 export default class UserServices {
-    async create (name, email, registration, departament, password, checkUser, populate, role) {
+    async create (name, email, registration, departament, password, checkUser, populate, role, auth) {
+        if (!auth){
+            throw new Error ("Usuário não autenticado.")
+        }
+
+        const tokenData = new Authenticator().getTokenData(auth)
+
+        if (!tokenData){
+            throw new Error ("Usuário não autenticado.")
+        }
+
+        if (tokenData.role !== 'ADMIN'){
+            throw new Error ("Usuário não autorizado.")
+        }
+
         if (!name || !email || !registration || !departament || !password){
             throw new Error ("Campos incompletos.")
         }

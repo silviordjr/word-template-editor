@@ -13,4 +13,4 @@ app.get("/current", userController.getCurrent)
 
 app.post("/files/:model", fileController.create)
 app.get("/files/:userId", fileController.getByUser)
-app.get("/download/:id", fileController.download)
+app.get("/download/:id/:token", fileController.download)
