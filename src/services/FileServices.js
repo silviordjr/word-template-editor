@@ -123,4 +123,27 @@ export default class FileServices {
 
         return files
     }
+
+    async downloadModel (token, model){
+        if (!token){
+            throw new Error ("Usuário não autenticado.")
+        }
+
+        const tokenData = new Authenticator().getTokenData(token)
+
+        if (!tokenData){
+            throw new Error ("Usuário não autenticado.")
+        }
+
+        const __fileName = fileURLToPath(import.meta.url);
+        const __dirname = path.dirname(__fileName);
+
+        const file = path.resolve(__dirname, `../sheets/${model}.xlsx`).toString()
+
+        if (!file){
+            throw new Error ("Arquivo inexistente.")
+        }
+
+        return file
+    }
 }

@@ -51,4 +51,26 @@ export default class FileController {
             res.status(400).send({message: error.message})
         }
     }
+
+    async downloadModel (req,res) {
+        try {
+            const token = req.params.token
+            const model = req.params.model
+            const pathUrl = req.path
+
+            const file = await new FileServices().downloadModel(token, model)
+            
+            if (pathUrl !== "/"){
+                res.download(file, (err) => {
+                    if (err){
+                        console.log (err)
+                    }
+                })
+            } else {
+                res.status(200).send("ok")
+            }
+        } catch (error) {
+            res.status(400).send({message: error.message})
+        }
+    }
 }
