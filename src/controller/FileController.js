@@ -46,7 +46,7 @@ export default class FileController {
 
             const files = await new FileServices().getByUserId(token, userId, page, new FileDatabase().getByUserId)
 
-            res.status(200).send({files})
+            res.status(200).send(files)
         } catch (error) {
             res.status(400).send({message: error.message})
         }

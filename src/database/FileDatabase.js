@@ -21,7 +21,8 @@ export default class FileDatabase {
     }
 
     async getByUserId (userId, page, owner) {
-        let files 
+        let files  
+        let count
         
         if (owner){
             files = await connection ('files')
@@ -30,6 +31,10 @@ export default class FileDatabase {
             .orderBy('date', 'desc')
             .limit(10)
             .offset(10*(page - 1))
+
+            count = await connection ('files')
+            .where({user_id: userId})
+            .count('id')
         } else {
             files = await connection ('files')
             .where({user_id: userId})
@@ -38,8 +43,13 @@ export default class FileDatabase {
             .orderBy('date', 'desc')
             .limit(10)
             .offset(10*(page - 1))
+
+            count = await connection ('files')
+            .where({user_id: userId})
+            .andWhere({protected: false})
+            .count('id')
         }
     
-        return files
+        return {files, count}
     }
 }
