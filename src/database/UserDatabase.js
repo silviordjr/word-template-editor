@@ -41,10 +41,13 @@ export default class UserDatabase {
         const users = await connection('users')
         .select('id', 'name', 'email', 'registration', 'departament')
         .where('name', 'like', `%${name}%`)
-        .limit(10)
-        .offset((page - 1) * 10)
+        .limit(9)
+        .offset((page - 1)*9)
 
-        return users
+        const count = await connection ('users')
+        .count('id')
+
+        return {users, count}
     } 
 
     async getById (id){
