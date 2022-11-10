@@ -122,4 +122,28 @@ export default class UserServices {
 
         return user
     }
+
+    validateToken (token) {
+        if (!token){
+            throw new Error ("Usuário não autenticado.")
+        }
+
+        const tokenData = new Authenticator().getTokenData(token)
+
+        let userInfo
+
+        if (!tokenData){
+            userInfo = {
+                validToken: false,
+                message: 'Token Inválido.'
+            }
+        } else {
+            userInfo = {
+                validToken: true,
+                role: tokenData.role
+            }
+        }
+
+        return userInfo
+    }
 }

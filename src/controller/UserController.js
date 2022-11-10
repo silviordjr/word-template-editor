@@ -70,6 +70,21 @@ export default class UserController {
         }
     }
 
+    async validateToken (req,res) {
+        try {
+            const token = req.headers.authorization
+
+            const userInfo = new UserServices().validateToken(token)
+            
+            res.status(200).send(userInfo)
+        } catch (error) {
+            res.status(400).send({
+                validToken: false, 
+                message: error.message || error.sqlmessage
+            })
+        }
+    }
+
     async update (req, res) {
 
     }
