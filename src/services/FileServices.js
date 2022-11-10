@@ -40,6 +40,12 @@ export default class FileServices {
 
         })
 
+        const id = new IdGenerator().generateId()
+
+        if (!body.name){
+            body.name = id
+        }
+
         doc.render(body)
 
         const buf = doc.getZip().generate({
@@ -47,7 +53,6 @@ export default class FileServices {
             compression: "DEFLATE",
         })
 
-        const id = new IdGenerator().generateId()
 
         const outputDir = path.resolve(__dirname, `../outputs/${id}.docx`)
 
