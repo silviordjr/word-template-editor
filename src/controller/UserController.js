@@ -86,7 +86,17 @@ export default class UserController {
     }
 
     async update (req, res) {
+        try {
+            const token = req.headers.authorization
+            const userId = req.params.id
+            const {name, email, registration, departament, role} = req.body
 
+            await new UserServices().update(name, email, registration, departament, role, token, userId, new UserDatabase().getById, new UserDatabase().checkByEmail, new UserDatabase().update)
+            
+            res.status(200).send({message: 'Usuário atualizado. '})
+        } catch (error) {
+            res.status(400).send({mesage: error.message || error.sqlmessage})
+        }
     }
 
     async delete(req, res) {

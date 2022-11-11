@@ -146,4 +146,48 @@ export default class UserServices {
 
         return userInfo
     }
+
+    async update (name, email, registration, departament, role, token, userId, getByID, checkByEmail, updateUser) {
+        if (!token){
+            throw new Error ("Usuário não autenticado.")
+        }
+
+        const tokenData = new Authenticator().getTokenData(token)
+
+        if (!tokenData){
+            throw new Error ("Usuário não autenticado.")
+        }
+
+        if (role === 'ADMIN' && tokenData.role !== 'ADMIN'){
+            throw new Error ("Sem permissão para a operação.")
+        }
+
+        if (userId !== tokenData.id && tokenData.role !== 'ADMIN'){
+            throw new Error ("Sem permissão para a operação.")
+        }
+
+        const emailArr = email.split('@')
+
+        if (!emailArr[1]){
+            throw new Error ("Campo email inválido.")
+        }
+
+        if (emailArr[1] !== 'casal.al.gov.br'){
+            throw new Error ("Campo email inválido.")
+        }
+
+        const user = await getByID(userId)
+
+        if (user.email === email){
+            email = ''
+        }
+
+        const usedEmail = await checkByEmail(email)
+
+        if (usedEmail) {
+            throw new Error ("Emeil cadastrado a outro usuário.")
+        }
+
+        await updateUser(name, email, registration, departament, role, userId)
+    }
 }

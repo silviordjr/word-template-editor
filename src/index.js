@@ -11,6 +11,7 @@ app.get("/users", userController.getAll)
 app.get("/users/:id", userController.getById)
 app.get("/current", userController.getCurrent)
 app.get("/token", userController.validateToken)
+app.put("/users/:id", userController.update)
 
 app.post("/files/:model", fileController.create)
 app.get("/files/:userId", fileController.getByUser)

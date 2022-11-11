@@ -52,9 +52,32 @@ export default class UserDatabase {
 
     async getById (id){
         const user = await connection ('users')
-        .select('id', 'name', 'email', 'registration', 'departament')
+        .select('id', 'name', 'email', 'registration', 'departament', 'role')
         .where({id})
 
         return user[0]
+    }
+
+    async update (name, email, registration, departament, role, userId) {
+        if (!email){
+            await connection ('users')
+            .where({id: userId})
+            .update({
+                name,
+                registration,
+                departament,
+                role
+            })
+        } else {
+            await connection ('users')
+            .where({id: userId})
+            .update({
+                name,
+                email,
+                registration,
+                departament,
+                role
+            })
+        }
     }
 }
