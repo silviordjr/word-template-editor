@@ -59,25 +59,28 @@ export default class UserDatabase {
     }
 
     async update (name, email, registration, departament, role, userId) {
-        if (!email){
-            await connection ('users')
-            .where({id: userId})
-            .update({
-                name,
-                registration,
-                departament,
-                role
-            })
-        } else {
-            await connection ('users')
-            .where({id: userId})
-            .update({
-                name,
-                email,
-                registration,
-                departament,
-                role
-            })
-        }
+        await connection ('users')
+        .where({id: userId})
+        .update({
+            name,
+            email,
+            registration,
+            departament,
+            role
+        })
+    }
+
+    async saveUpdate (id, updaterID, updatedID, infos) {
+        await connection ('update_management')
+        .insert({
+            id,
+            updater_id: updaterID,
+            updated_id: updatedID,
+            name: infos.name,
+            email: infos.email,
+            registration: infos.registration,
+            departament: infos.departament,
+            role: infos.role
+        })
     }
 }

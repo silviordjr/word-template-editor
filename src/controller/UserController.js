@@ -91,7 +91,7 @@ export default class UserController {
             const userId = req.params.id
             const {name, email, registration, departament, role} = req.body
 
-            await new UserServices().update(name, email, registration, departament, role, token, userId, new UserDatabase().getById, new UserDatabase().checkByEmail, new UserDatabase().update)
+            await new UserServices().update(name, email, registration, departament, role, token, userId, new UserDatabase().getById, new UserDatabase().checkByEmail, new UserDatabase().update, new UserDatabase().saveUpdate)
             
             res.status(200).send({message: 'Usuário atualizado. '})
         } catch (error) {

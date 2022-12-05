@@ -147,7 +147,7 @@ export default class UserServices {
         return userInfo
     }
 
-    async update (name, email, registration, departament, role, token, userId, getByID, checkByEmail, updateUser) {
+    async update (name, email, registration, departament, role, token, userId, getByID, checkByEmail, updateUser, saveUpdate) {
         if (!token){
             throw new Error ("Usuário não autenticado.")
         }
@@ -178,16 +178,24 @@ export default class UserServices {
 
         const user = await getByID(userId)
 
-        if (user.email === email){
-            email = ''
-        }
-
         const usedEmail = await checkByEmail(email)
 
-        if (usedEmail) {
-            throw new Error ("Emeil cadastrado a outro usuário.")
+        if (usedEmail && user.email !== email) {
+            throw new Error ("Email cadastrado a outro usuário.")
+        }
+
+        const updateInfos = {
+            name: user.name === name ? '' : name,
+            email: user.email === email ? '' : email,
+            registration: user.registration === registration ? '' : registration,
+            role: user.role === role ? '' : role,
+            departament: user.departament === departament ? '' : departament
         }
 
         await updateUser(name, email, registration, departament, role, userId)
+
+        const id = new IdGenerator().generateId()
+
+        await saveUpdate(id, tokenData.id, userId, updateInfos)
     }
 }
